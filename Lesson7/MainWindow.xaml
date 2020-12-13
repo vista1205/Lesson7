@@ -5,15 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lesson7"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="MainWindow" Height="450" Width="930" Loaded="Window_Loaded">
     <Window.Resources>
     </Window.Resources>
-    <ListView x:Name="depList" HorizontalAlignment="Left" Height="179" Margin="61,80,0,0" VerticalAlignment="Top" Width="476" >
-        <ListView.View>
-            <GridView>
-                <GridViewColumn Width="150" Header="ID" DisplayMemberBinding="{Binding ID}"/>
-                <GridViewColumn Width="100" Header="название департамента" DisplayMemberBinding="{Binding NameDep}"/>
-            </GridView>
-        </ListView.View>
-    </ListView>
+    <Grid>
+        <DataGrid x:Name="allEmployeeDataGrid" HorizontalAlignment="Left" Height="263" Margin="59,10,0,0" VerticalAlignment="Top" Width="437" ItemsSource="{Binding}" IsReadOnly="True">
+        </DataGrid>
+        <ComboBox x:Name="allDepComboBox" HorizontalAlignment="Left" Margin="545,10,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding}">
+            <ComboBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Департамент}"/>
+                </DataTemplate>
+            </ComboBox.ItemTemplate>
+        </ComboBox>
+
+    </Grid>
 </Window>

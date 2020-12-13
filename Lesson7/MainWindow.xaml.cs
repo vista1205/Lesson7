@@ -22,71 +22,39 @@ namespace Lesson7
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string connectionString = "Data Source=localhost;Initial Catalog=PersonDB;User ID=PersonUser; Password=12345";
-        public List<Departments> depListS = new List<Departments>();
-        SqlConnection connection;
-        SqlDataAdapter adapter;
-        DataTable dt;
+        public string connectionString = "Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
 
         public MainWindow()
         {
             InitializeComponent();
-            depListS = GetDepartments();
-            depList.ItemsSource = depListS;
 
-        }
-        private List<Departments> GetDepartments()
-        {
-            List<Departments> dep = new List<Departments>();
-            string sqlExp = "SELECT * FROM Departament;";
-            using(SqlConnection connect=new SqlConnection(connectionString))
-            {
-                connect.Open();
-                SqlCommand command = new SqlCommand(sqlExp, connect);
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
-                {
-                    while (reader.Read())
-                    {
-                        var depart = new Departments()
-                        {
-                            NameDep = reader.GetString(1)
-                        };
-                        dep.Add(depart);
-                    }
-                }
-                reader.Close();
-            }
-            return dep;
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            GetDepartments();
+            using(SqlConnection connect = new SqlConnection(connectionString))
+            {
+                connect.Open();
+                string com = "SELECT [Employee].[ФИО], [Employee].[Дата рождения], [Employee].[E-mail], [Department].[Департамент], [Employee].[Телефон] FROM [Employee], [Department] WHERE [Employee].[Департамент]=[Department].[ID];";
+                SqlCommand command = new SqlCommand(com, connect);
+                SqlDataAdapter dadapter;
+                dadapter = new SqlDataAdapter();
+                dadapter.SelectCommand = command;
+                DataTable dt = new DataTable();
+                dadapter.Fill(dt);
+                allEmployeeDataGrid.DataContext = dt.DefaultView;
+            }
+            using (SqlConnection connect = new SqlConnection(connectionString))
+            {
+                connect.Open();
+                string com = "SELECT [Департамент] FROM [Department];";
+                SqlCommand command = new SqlCommand(com, connect);
+                SqlDataAdapter dadapter = new SqlDataAdapter();
+                dadapter.SelectCommand = command;
+                DataTable dt = new DataTable();
+                dadapter.Fill(dt);
+                allDepComboBox.ItemsSource = dt.DefaultView;
+            }
         }
-               private List<Employee> GetEmployees()
-      {
-          List<Employee> employeesList = new List<Employee>();
-          string sqlExp = "SELECT * FROM Employee;";
-          using(SqlConnection connect=new SqlConnection(connectionString))
-          {
-              connect.Open();
-              SqlCommand command = new SqlCommand(sqlExp, connect);
-              SqlDataReader reader = command.ExecuteReader();
-              if (reader.HasRows)
-              {
-                  while (reader.Read())
-                  {
-                        string depo = reader.GetString(2);
-                      var employee = new Employee()
-                      {
-                          ID = Convert.ToInt32(reader.GetValue(0)),
-                          FIO=reader.GetString(1),                          
-                          Department=(Departments)reader.GetString(2),
-                      }
-                  }
-              }
-          }
-      }
     }
 }
