@@ -22,71 +22,228 @@ namespace Lesson7
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string connectionString = "Data Source=localhost;Initial Catalog=PersonDB;User ID=PersonUser; Password=12345";
-        public List<Departments> depListS = new List<Departments>();
-        SqlConnection connection;
-        SqlDataAdapter adapter;
-        DataTable dt;
+        //public string connectionString = $"Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
+        Avtorization avt1 = new Avtorization();        
+        public static string loginUser;
+        public static string PasswUser;
+        public string connectionString = "Data Source=localhost;Initial Catalog=Persondb;User ID="+ loginUser +"; Password="+PasswUser+";";
+        DataTable dtGeneral;
+        DataTable dtDepart;
 
         public MainWindow()
         {
             InitializeComponent();
-            depListS = GetDepartments();
-            depList.ItemsSource = depListS;
 
         }
-        private List<Departments> GetDepartments()
+        private void ObnvDepartment()
         {
-            List<Departments> dep = new List<Departments>();
-            string sqlExp = "SELECT * FROM Departament;";
-            using(SqlConnection connect=new SqlConnection(connectionString))
+            using (SqlConnection connect = new SqlConnection(connectionString))
             {
                 connect.Open();
-                SqlCommand command = new SqlCommand(sqlExp, connect);
-                SqlDataReader reader = command.ExecuteReader();
-                if (reader.HasRows)
+                string com = "SELECT * FROM [Department];";
+                SqlCommand command = new SqlCommand(com, connect);
+                SqlDataAdapter dadapter = new SqlDataAdapter();
+                dadapter.SelectCommand = command;
+                dtDepart = new DataTable();
+                dadapter.Fill(dtDepart);
+                alldepDataGrid.DataContext = dtDepart.DefaultView;
+                connect.Close();
+            }
+        }
+        private void ObnvEmployee()
+        {
+            using (SqlConnection connect = new SqlConnection(connectionString))
+            {
+                connect.Open();
+                string com = "SELECT [Employee].[ID], [Employee].[ФИО], [Employee].[Дата рождения], [Employee].[E-mail], [Department].[Департамент], [Employee].[Телефон] FROM [Employee], [Department] WHERE [Employee].[Департамент]=[Department].[ID];";
+                SqlCommand command = new SqlCommand(com, connect);
+                SqlDataAdapter dadapter;
+                dadapter = new SqlDataAdapter();
+                dadapter.SelectCommand = command;
+                dtGeneral = new DataTable();
+                dadapter.Fill(dtGeneral);
+                allEmployeeDataGrid.DataContext = dtGeneral.DefaultView;
+                connect.Close();
+            }
+        }
+        private string Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            Avtorization avtorization = new Avtorization();
+            if (avtorization.ShowDialog() == true)
+            {
+                loginUser = avtorization.LoginTB.Text.ToString();
+                PasswUser = avtorization.PasswTB.Text.ToString();
+                SqlConnection connect = new SqlConnection(connectionString);
+                connect.Open();
+                if (connect.State == ConnectionState.Open)
                 {
-                    while (reader.Read())
+                    ObnvEmployee();
+                    ObnvDepartment();
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка! Вы ввели неверно логин или пароль!", "Ошибка подключения к БД!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            ObnvEmployee();
+            ObnvDepartment();
+        }
+        private void editEmpl_Click(object sender, RoutedEventArgs e)
+        {
+            if (allEmployeeDataGrid.SelectedItem != null)
+            {
+                EditEmpl edtempl = new EditEmpl();
+                edtempl.allDepComboBox1.ItemsSource = dtDepart.DefaultView;
+                DataRowView selectemp = (DataRowView)allEmployeeDataGrid.SelectedItem;             
+                var request = dtGeneral
+                    .AsEnumerable()
+                    .Where(emplID => emplID.Field<int>("ID") == (int)selectemp["ID"]);
+                int idemployee;                
+                string result = String.Empty;                
+                foreach(var item in request)
+                {
+                    SqlConnection conn1 = new SqlConnection(connectionString);
+                    conn1.Open();
+                    SqlCommand cmd = conn1.CreateCommand();
+                    cmd.CommandText = $"SELECT [ID] FROM [Department] WHERE [Department].[Департамент]='{Convert.ToString(item[4])}';";
+                    int resid = ((int)cmd.ExecuteScalar());
+                    conn1.Close();
+                    result += $"{item[0]}";
+                    edtempl.FIOtextBox.Text = Convert.ToString(item[1]);
+                    edtempl.edtdatePicker.SelectedDate = (DateTime)item[2];
+                    edtempl.MailtextBox.Text = Convert.ToString(item[3]);
+                    edtempl.allDepComboBox1.SelectedIndex = resid - 1;
+                    edtempl.PhonetextBox.Text = Convert.ToString(item[5]);
+                }                
+                if (edtempl.ShowDialog() == true)
+                {
+                    if (Convert.ToString(edtempl.FIOtextBox.Text) != "" && Convert.ToString(edtempl.allDepComboBox1.SelectedValue) != "")
                     {
-                        var depart = new Departments()
+                        idemployee = Convert.ToInt32(result);
+                        string com = $"UPDATE [Employee] SET [ФИО]='{edtempl.FIOtextBox.Text}', [Дата рождения]='{(DateTime)edtempl.edtdatePicker.SelectedDate}', [E-mail]='{edtempl.MailtextBox.Text}', [Департамент]='{edtempl.allDepComboBox1.SelectedIndex + 1}', [Телефон]='{edtempl.PhonetextBox.Text}' WHERE [Employee].[ID]='{idemployee}';";
+                        using (SqlConnection connect = new SqlConnection(connectionString))
                         {
-                            NameDep = reader.GetString(1)
-                        };
-                        dep.Add(depart);
+                            connect.Open();
+                            SqlCommand command = new SqlCommand(com, connect);
+                            SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                            dataAdapter.SelectCommand = command;
+                            dataAdapter.Fill(dtGeneral);
+                            connect.Close();
+                            ObnvEmployee();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка! Вы не ввели ФИО сотрудника или не выбрали его Департамент!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
-                reader.Close();
             }
-            return dep;
+            else
+            {
+                MessageBox.Show("Ошибка! Вы не выбрали работника для изменения!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void addEmpl_Click(object sender, RoutedEventArgs e)
         {
-            GetDepartments();
+            AddEmployee addEmployee = new AddEmployee();
+            addEmployee.addDepComboBox.ItemsSource = dtDepart.DefaultView;
+            if (addEmployee.ShowDialog() == true)
+            {
+                if (addEmployee.FIOtextBox.Text != "" && addEmployee.addDepComboBox.SelectedItem != "")
+                {
+                    string com = $"INSERT INTO [Employee] ([ФИО], [Дата рождения], [E-mail], [Департамент], [Телефон]) VALUES ('{addEmployee.FIOtextBox.Text}', '{(DateTime)addEmployee.edtdatePicker.SelectedDate}', '{addEmployee.MailtextBox.Text}', '{addEmployee.addDepComboBox.SelectedIndex + 1}', '{addEmployee.PhonetextBox.Text}');";
+                    using (SqlConnection connect = new SqlConnection(connectionString))
+                    {
+                        connect.Open();
+                        SqlCommand command = new SqlCommand(com, connect);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                        dataAdapter.SelectCommand = command;
+                        dataAdapter.Fill(dtGeneral);
+                        ObnvEmployee();
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка! Вы не ввели ФИО нового сотрудника или не выбрали его Департамент!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
-               private List<Employee> GetEmployees()
-      {
-          List<Employee> employeesList = new List<Employee>();
-          string sqlExp = "SELECT * FROM Employee;";
-          using(SqlConnection connect=new SqlConnection(connectionString))
-          {
-              connect.Open();
-              SqlCommand command = new SqlCommand(sqlExp, connect);
-              SqlDataReader reader = command.ExecuteReader();
-              if (reader.HasRows)
-              {
-                  while (reader.Read())
-                  {
-                        string depo = reader.GetString(2);
-                      var employee = new Employee()
-                      {
-                          ID = Convert.ToInt32(reader.GetValue(0)),
-                          FIO=reader.GetString(1),                          
-                          Department=(Departments)reader.GetString(2),
-                      }
-                  }
-              }
-          }
-      }
+
+        private void editDep_Click(object sender, RoutedEventArgs e)
+        {
+            EditDepartment editDepartment = new EditDepartment();
+            if (alldepDataGrid.SelectedItem != null)
+            {
+                DataRowView selectemp = (DataRowView)alldepDataGrid.SelectedItem;
+                string result = String.Empty;
+                var request = dtDepart
+                    .AsEnumerable()
+                    .Where(emplID => emplID.Field<int>("ID") == (int)selectemp["ID"]);
+                foreach (var item in request)
+                {
+                    result += $"{item[0]}";
+                    editDepartment.oldName.Content = Convert.ToString(item[1]);
+                }
+                int index = Convert.ToInt32(result);
+                if (editDepartment.ShowDialog() == true)
+                {
+                    if (editDepartment.newName.Text != "")
+                    {
+                        string com = $"UPDATE [Department] SET [Департамент]='{editDepartment.newName.Text}' WHERE [Department].[ID]='{index}';";
+                        using (SqlConnection connect = new SqlConnection(connectionString))
+                        {
+                            connect.Open();
+                            SqlCommand command = new SqlCommand(com, connect);
+                            SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                            dataAdapter.SelectCommand = command;
+                            dataAdapter.Fill(dtDepart);
+                            ObnvEmployee();
+                            ObnvDepartment();
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка! Вы не ввели новое название департамента!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                    
+                }
+            }
+            else
+            {
+                MessageBox.Show("Ошибка! Вы не выбрали Отдел для изменения!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private void addDep_Click(object sender, RoutedEventArgs e)
+        {
+            AddDepartment addDepartment = new AddDepartment();
+            if (addDepartment.ShowDialog() == true)
+            {
+                if (addDepartment.addDeptextBox.Text != "")
+                {
+                    using (SqlConnection connect = new SqlConnection(connectionString))
+                    {
+                        connect.Open();
+                        string com = $"INSERT INTO [Department] ([Департамент]) VALUES ('{addDepartment.addDeptextBox.Text}');";
+                        SqlCommand command = new SqlCommand(com, connect);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                        dataAdapter.SelectCommand = command;
+                        dataAdapter.Fill(dtDepart);
+                        connect.Close();
+                        ObnvDepartment();
+                    }
+                }
+                if(addDepartment.addDeptextBox.Text=="")
+                {
+                    MessageBox.Show("Ошибка! Вы не ввели название нового департамента!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        }
+
+        private void ConnectDB_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

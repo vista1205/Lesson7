@@ -5,15 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lesson7"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+        Title="Сотрудники Предприятия" Height="381.069" Width="642.572" Loaded="Window_Loaded" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Window.Resources>
     </Window.Resources>
-    <ListView x:Name="depList" HorizontalAlignment="Left" Height="179" Margin="61,80,0,0" VerticalAlignment="Top" Width="476" >
-        <ListView.View>
-            <GridView>
-                <GridViewColumn Width="150" Header="ID" DisplayMemberBinding="{Binding ID}"/>
-                <GridViewColumn Width="100" Header="название департамента" DisplayMemberBinding="{Binding NameDep}"/>
-            </GridView>
-        </ListView.View>
-    </ListView>
+    <Grid>
+        <DataGrid x:Name="allEmployeeDataGrid" Height="184" Margin="10,10,0,0" VerticalAlignment="Top" ItemsSource="{Binding Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Left" Width="609"/>
+        <Button x:Name="editEmpl" Content="Изменить Работника" HorizontalAlignment="Left" Margin="304,214,0,0" VerticalAlignment="Top" Width="131" Click="editEmpl_Click"/>
+        <DataGrid x:Name="alldepDataGrid" HorizontalAlignment="Left" Height="141" Margin="10,199,0,0" VerticalAlignment="Top" Width="247" ItemsSource="{Binding}"/>
+        <Button x:Name="addEmpl" Content="Добавить Работника" HorizontalAlignment="Left" Margin="304,239,0,0" VerticalAlignment="Top" Width="131" Click="addEmpl_Click"/>
+        <Button x:Name="editDep" Content="Изменить Отдел" HorizontalAlignment="Left" Margin="444,214,0,0" VerticalAlignment="Top" Width="131" Click="editDep_Click"/>
+        <Button x:Name="addDep" Content="Добавить Отдел" HorizontalAlignment="Left" Margin="444,239,0,0" VerticalAlignment="Top" Width="131" Click="addDep_Click"/>
+        <Button x:Name="ConnectDB" Content="Подключиться к БД" HorizontalAlignment="Left" Margin="304,264,0,0" VerticalAlignment="Top" Width="271" Click="ConnectDB_Click"/>
+
+    </Grid>
 </Window>
