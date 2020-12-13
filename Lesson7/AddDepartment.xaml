@@ -5,11 +5,15 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lesson7"
         mc:Ignorable="d"
-        Title="AddDepartment" Height="158.671" Width="340.896">
+        Title="Добавление Нового Отдела" Height="141.763" Width="394.22" ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Button x:Name="saveButton" Content="Сохранить" HorizontalAlignment="Left" Margin="31,77,0,0" VerticalAlignment="Top" Width="75" Click="saveButton_Click"/>
-        <Button x:Name="cancelButton" Content="Отмена" HorizontalAlignment="Left" Margin="191,77,0,0" VerticalAlignment="Top" Width="75" Click="cancelButton_Click"/>
-        <Label x:Name="label" Content="Новый департамент:" HorizontalAlignment="Left" Margin="23,34,0,0" VerticalAlignment="Top" Width="137"/>
-        <TextBox x:Name="addDeptextBox" HorizontalAlignment="Left" Height="23" Margin="160,38,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="161*"/>
+            <ColumnDefinition Width="32*"/>
+        </Grid.ColumnDefinitions>
+        <Button x:Name="saveButton" Content="Сохранить" HorizontalAlignment="Left" Margin="23,69,0,0" VerticalAlignment="Top" Width="75" Click="saveButton_Click"/>
+        <Button x:Name="cancelButton" Content="Отмена" HorizontalAlignment="Left" Margin="284,69,0,0" VerticalAlignment="Top" Width="75" Click="cancelButton_Click" Grid.ColumnSpan="2"/>
+        <Label x:Name="label" Content="Новый департамент:" HorizontalAlignment="Left" Margin="23,21,0,0" VerticalAlignment="Top" Width="137"/>
+        <TextBox x:Name="addDeptextBox" HorizontalAlignment="Left" Height="23" Margin="160,25,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="199" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

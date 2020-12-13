@@ -5,13 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lesson7"
         mc:Ignorable="d"
-        Title="EditDepartment" Height="191.185" Width="520.376">
+        Title="Редактирование Департамента" Height="180.78" Width="372.109" WindowStartupLocation="CenterScreen" ResizeMode="NoResize">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="61*"/>
+            <ColumnDefinition Width="13*"/>
+        </Grid.ColumnDefinitions>
         <Label x:Name="label" Content="Старое название:" HorizontalAlignment="Left" Margin="32,24,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="oldName" Content="Label" HorizontalAlignment="Left" Margin="148,24,0,0" VerticalAlignment="Top"/>
+        <Label x:Name="oldName" Content="Label" HorizontalAlignment="Left" Margin="148,24,0,0" VerticalAlignment="Top" Grid.ColumnSpan="2" Width="195"/>
         <Label x:Name="label_Copy1" Content="Новое название:" HorizontalAlignment="Left" Margin="32,55,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="newName" HorizontalAlignment="Left" Height="23" Margin="148,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="saveButton" Content="Сохранить" HorizontalAlignment="Left" Margin="32,86,0,0" VerticalAlignment="Top" Width="75" Click="saveButton_Click"/>
-        <Button x:Name="cancelButton" Content="Отмена" HorizontalAlignment="Left" Margin="193,91,0,0" VerticalAlignment="Top" Width="75" Click="cancelButton_Click"/>
+        <TextBox x:Name="newName" HorizontalAlignment="Left" Height="23" Margin="148,55,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="195" Grid.ColumnSpan="2"/>
+        <Button x:Name="saveButton" Content="Сохранить" HorizontalAlignment="Left" Margin="32,103,0,0" VerticalAlignment="Top" Width="75" Click="saveButton_Click"/>
+        <Button x:Name="cancelButton" Content="Отмена" HorizontalAlignment="Left" Margin="268,103,0,0" VerticalAlignment="Top" Width="75" Click="cancelButton_Click" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>
