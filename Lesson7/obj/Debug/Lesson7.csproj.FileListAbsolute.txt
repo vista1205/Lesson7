@@ -35,3 +35,6 @@ C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 ур�
 C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\EditDepartment.baml
 C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\AddDepartment.g.cs
 C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\AddDepartment.baml
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\Lesson7.csprojAssemblyReference.cache
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\Avtorization.g.cs
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\Avtorization.baml

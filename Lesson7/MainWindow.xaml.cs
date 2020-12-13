@@ -22,7 +22,11 @@ namespace Lesson7
     /// </summary>
     public partial class MainWindow : Window
     {
-        public string connectionString = "Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
+        //public string connectionString = $"Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
+        Avtorization avt1 = new Avtorization();        
+        public static string loginUser;
+        public static string PasswUser;
+        public string connectionString = "Data Source=localhost;Initial Catalog=Persondb;User ID="+ loginUser +"; Password="+PasswUser+";";
         DataTable dtGeneral;
         DataTable dtDepart;
 
@@ -62,8 +66,25 @@ namespace Lesson7
                 connect.Close();
             }
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private string Window_Loaded(object sender, RoutedEventArgs e)
         {
+            Avtorization avtorization = new Avtorization();
+            if (avtorization.ShowDialog() == true)
+            {
+                loginUser = avtorization.LoginTB.Text.ToString();
+                PasswUser = avtorization.PasswTB.Text.ToString();
+                SqlConnection connect = new SqlConnection(connectionString);
+                connect.Open();
+                if (connect.State == ConnectionState.Open)
+                {
+                    ObnvEmployee();
+                    ObnvDepartment();
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка! Вы ввели неверно логин или пароль!", "Ошибка подключения к БД!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
             ObnvEmployee();
             ObnvDepartment();
         }
@@ -218,6 +239,11 @@ namespace Lesson7
                     MessageBox.Show("Ошибка! Вы не ввели название нового департамента!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
+        }
+
+        private void ConnectDB_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
