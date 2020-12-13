@@ -5,19 +5,24 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Lesson7"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="930" Loaded="Window_Loaded">
+        Title="MainWindow" Height="450" Width="818.15" Loaded="Window_Loaded">
     <Window.Resources>
     </Window.Resources>
     <Grid>
-        <DataGrid x:Name="allEmployeeDataGrid" HorizontalAlignment="Left" Height="263" Margin="59,10,0,0" VerticalAlignment="Top" Width="437" ItemsSource="{Binding}" IsReadOnly="True">
-        </DataGrid>
-        <ComboBox x:Name="allDepComboBox" HorizontalAlignment="Left" Margin="545,10,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding}">
+        <DataGrid x:Name="allEmployeeDataGrid" Height="184" Margin="10,10,0,0" VerticalAlignment="Top" ItemsSource="{Binding Mode=OneWay}" IsReadOnly="True" HorizontalAlignment="Left" Width="609"/>
+        <ComboBox x:Name="allDepComboBox" HorizontalAlignment="Left" Margin="627,10,0,0" VerticalAlignment="Top" Width="120" ItemsSource="{Binding}" ToolTip="Выберите отдел" Height="22">
             <ComboBox.ItemTemplate>
                 <DataTemplate>
                     <TextBlock Text="{Binding Департамент}"/>
                 </DataTemplate>
             </ComboBox.ItemTemplate>
         </ComboBox>
+        <TextBox x:Name="textBox" HorizontalAlignment="Left" Height="57" Margin="627,352,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="166"/>
+        <Button x:Name="editEmpl" Content="Изменить Работника" HorizontalAlignment="Left" Margin="10,324,0,0" VerticalAlignment="Top" Width="131" Click="editEmpl_Click"/>
+        <DataGrid x:Name="alldepDataGrid" HorizontalAlignment="Left" Height="100" Margin="10,199,0,0" VerticalAlignment="Top" Width="609" ItemsSource="{Binding}"/>
+        <Button x:Name="addEmpl" Content="Добавить Работника" HorizontalAlignment="Left" Margin="10,352,0,0" VerticalAlignment="Top" Width="131" Click="addEmpl_Click"/>
+        <Button x:Name="editDep" Content="Изменить Отдел" HorizontalAlignment="Left" Margin="146,324,0,0" VerticalAlignment="Top" Width="131" Click="editDep_Click"/>
+        <Button x:Name="addDep" Content="Добавить Отдел" HorizontalAlignment="Left" Margin="146,351,0,0" VerticalAlignment="Top" Width="131" Click="addDep_Click"/>
 
     </Grid>
 </Window>

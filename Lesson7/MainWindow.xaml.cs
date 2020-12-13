@@ -23,37 +23,163 @@ namespace Lesson7
     public partial class MainWindow : Window
     {
         public string connectionString = "Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
+        DataTable dtGeneral;
+        DataTable dtDepart;
 
         public MainWindow()
         {
             InitializeComponent();
 
         }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void ObnvDepartment()
         {
-            using(SqlConnection connect = new SqlConnection(connectionString))
+            using (SqlConnection connect = new SqlConnection(connectionString))
             {
                 connect.Open();
-                string com = "SELECT [Employee].[ФИО], [Employee].[Дата рождения], [Employee].[E-mail], [Department].[Департамент], [Employee].[Телефон] FROM [Employee], [Department] WHERE [Employee].[Департамент]=[Department].[ID];";
+                string com = "SELECT * FROM [Department];";
+                SqlCommand command = new SqlCommand(com, connect);
+                SqlDataAdapter dadapter = new SqlDataAdapter();
+                dadapter.SelectCommand = command;
+                dtDepart = new DataTable();
+                dadapter.Fill(dtDepart);
+                alldepDataGrid.DataContext = dtDepart.DefaultView;
+                allDepComboBox.ItemsSource = dtDepart.DefaultView;
+                connect.Close();
+            }
+        }
+        private void ObnvEmployee()
+        {
+            using (SqlConnection connect = new SqlConnection(connectionString))
+            {
+                connect.Open();
+                string com = "SELECT [Employee].[ID], [Employee].[ФИО], [Employee].[Дата рождения], [Employee].[E-mail], [Department].[Департамент], [Employee].[Телефон] FROM [Employee], [Department] WHERE [Employee].[Департамент]=[Department].[ID];";
                 SqlCommand command = new SqlCommand(com, connect);
                 SqlDataAdapter dadapter;
                 dadapter = new SqlDataAdapter();
                 dadapter.SelectCommand = command;
-                DataTable dt = new DataTable();
-                dadapter.Fill(dt);
-                allEmployeeDataGrid.DataContext = dt.DefaultView;
+                dtGeneral = new DataTable();
+                dadapter.Fill(dtGeneral);
+                allEmployeeDataGrid.DataContext = dtGeneral.DefaultView;
+                connect.Close();
             }
-            using (SqlConnection connect = new SqlConnection(connectionString))
+        }
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ObnvEmployee();
+            ObnvDepartment();
+        }
+        private void editEmpl_Click(object sender, RoutedEventArgs e)
+        {
+            if (allEmployeeDataGrid.SelectedItem != null)
             {
-                connect.Open();
-                string com = "SELECT [Департамент] FROM [Department];";
-                SqlCommand command = new SqlCommand(com, connect);
-                SqlDataAdapter dadapter = new SqlDataAdapter();
-                dadapter.SelectCommand = command;
-                DataTable dt = new DataTable();
-                dadapter.Fill(dt);
-                allDepComboBox.ItemsSource = dt.DefaultView;
+                EditEmpl edtempl = new EditEmpl();
+                edtempl.allDepComboBox1.ItemsSource = dtDepart.DefaultView;
+                DataRowView selectemp = (DataRowView)allEmployeeDataGrid.SelectedItem;             
+                var request = dtGeneral
+                    .AsEnumerable()
+                    .Where(emplID => emplID.Field<int>("ID") == (int)selectemp["ID"]);
+                int idemployee;                
+                string result = String.Empty;                
+                foreach(var item in request)
+                {
+                    SqlConnection conn1 = new SqlConnection(connectionString);
+                    conn1.Open();
+                    SqlCommand cmd = conn1.CreateCommand();
+                    cmd.CommandText = $"SELECT [ID] FROM [Department] WHERE [Department].[Департамент]='{Convert.ToString(item[4])}';";
+                    int resid = ((int)cmd.ExecuteScalar());
+                    conn1.Close();
+                    result += $"{item[0]}";
+                    edtempl.FIOtextBox.Text = Convert.ToString(item[1]);
+                    edtempl.edtdatePicker.SelectedDate = (DateTime)item[2];
+                    edtempl.MailtextBox.Text = Convert.ToString(item[3]);
+                    edtempl.allDepComboBox1.SelectedIndex = resid - 1;
+                    edtempl.PhonetextBox.Text = Convert.ToString(item[5]);
+                }                
+                if (edtempl.ShowDialog() == true)
+                {
+                    idemployee = Convert.ToInt32(result);                    
+                    string com= $"UPDATE [Employee] SET [ФИО]='{edtempl.FIOtextBox.Text}', [Дата рождения]='{(DateTime)edtempl.edtdatePicker.SelectedDate}', [E-mail]='{edtempl.MailtextBox.Text}', [Департамент]='{edtempl.allDepComboBox1.SelectedIndex+1}', [Телефон]='{edtempl.PhonetextBox.Text}' WHERE [Employee].[ID]='{idemployee}';";
+                    using(SqlConnection connect=new SqlConnection(connectionString))
+                    {
+                        connect.Open();
+                        SqlCommand command = new SqlCommand(com, connect);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                        dataAdapter.SelectCommand = command;
+                        dataAdapter.Fill(dtGeneral);
+                        connect.Close();
+                        ObnvEmployee();
+                    }
+                }
+            }
+        }
+
+        private void addEmpl_Click(object sender, RoutedEventArgs e)
+        {
+            AddEmployee addEmployee = new AddEmployee();
+            addEmployee.addDepComboBox.ItemsSource = dtDepart.DefaultView;
+            if (addEmployee.ShowDialog() == true)
+            {
+                string com = $"INSERT INTO [Employee] ([ФИО], [Дата рождения], [E-mail], [Департамент], [Телефон]) VALUES ('{addEmployee.FIOtextBox.Text}', '{(DateTime)addEmployee.edtdatePicker.SelectedDate}', '{addEmployee.MailtextBox.Text}', '{addEmployee.addDepComboBox.SelectedIndex + 1}', '{addEmployee.PhonetextBox.Text}');";
+                using(SqlConnection connect=new SqlConnection(connectionString))
+                {
+                    connect.Open();
+                    SqlCommand command = new SqlCommand(com, connect);
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                    dataAdapter.SelectCommand = command;
+                    dataAdapter.Fill(dtGeneral);
+                    ObnvEmployee();
+                }
+            }
+        }
+
+        private void editDep_Click(object sender, RoutedEventArgs e)
+        {
+            EditDepartment editDepartment = new EditDepartment();
+            if (alldepDataGrid.SelectedItem != null)
+            {
+                DataRowView selectemp = (DataRowView)alldepDataGrid.SelectedItem;
+                string result = String.Empty;
+                var request = dtDepart
+                    .AsEnumerable()
+                    .Where(emplID => emplID.Field<int>("ID") == (int)selectemp["ID"]);
+                foreach (var item in request)
+                {
+                    result += $"{item[0]}";
+                    editDepartment.oldName.Content = Convert.ToString(item[1]);
+                }
+                int index = Convert.ToInt32(result);
+                if (editDepartment.ShowDialog() == true)
+                {
+                    string com = $"UPDATE [Department] SET [Департамент]='{editDepartment.newName.Text}' WHERE [Department].[ID]='{index}';";
+                    using (SqlConnection connect = new SqlConnection(connectionString))
+                    {
+                        connect.Open();
+                        SqlCommand command = new SqlCommand(com, connect);
+                        SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                        dataAdapter.SelectCommand = command;
+                        dataAdapter.Fill(dtDepart);
+                        ObnvEmployee();
+                        ObnvDepartment();
+                    }
+                }
+            }
+        }
+
+        private void addDep_Click(object sender, RoutedEventArgs e)
+        {
+            AddDepartment addDepartment = new AddDepartment();
+            if (addDepartment.ShowDialog() == true)
+            {
+                using(SqlConnection connect=new SqlConnection(connectionString))
+                {
+                    connect.Open();
+                    string com = $"INSERT INTO [Department] ([Департамент]) VALUES ('{addDepartment.addDeptextBox.Text}');";
+                    SqlCommand command = new SqlCommand(com, connect);
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter();
+                    dataAdapter.SelectCommand = command;
+                    dataAdapter.Fill(dtDepart);
+                    ObnvDepartment();
+                }
             }
         }
     }

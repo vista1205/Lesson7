@@ -28,3 +28,11 @@ C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 ур�
 C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\Lesson7.csproj.CoreCompileInputs.cache
 C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\Lesson7.exe
 C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\Lesson7.pdb
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\EditEmpl.g.cs
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\EditEmpl.baml
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\AddEmployee.g.cs
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\AddEmployee.baml
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\EditDepartment.g.cs
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\EditDepartment.baml
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\AddDepartment.g.cs
+C:\Users\Family\Desktop\Учёба\GeekBrains\Основы языка C# 2 уровень\Задания\Lesson7\Lesson7\obj\Debug\AddDepartment.baml
