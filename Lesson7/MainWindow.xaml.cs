@@ -22,11 +22,8 @@ namespace Lesson7
     /// </summary>
     public partial class MainWindow : Window
     {
-        //public string connectionString = $"Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
-        Avtorization avt1 = new Avtorization();        
-        public static string loginUser;
-        public static string PasswUser;
-        public string connectionString = "Data Source=localhost;Initial Catalog=Persondb;User ID="+ loginUser +"; Password="+PasswUser+";";
+        public string connectionString = $"Data Source=localhost;Initial Catalog=Persondb;User ID=PersonUser; Password=12345";
+        Avtorization avt1 = new Avtorization();
         DataTable dtGeneral;
         DataTable dtDepart;
 
@@ -34,6 +31,33 @@ namespace Lesson7
         {
             InitializeComponent();
 
+        }
+        public void ConnectDB()
+        {
+            Avtorization avtorization = new Avtorization();
+            if (avtorization.ShowDialog() == true)
+            {
+                if (avtorization.LoginTB.Text != "" && avtorization.passwBoxAvt.Password != "")
+                {
+                    if (avtorization.LoginTB.Text == "PersonUser" && avtorization.passwBoxAvt.Password == "12345")
+                    {
+                        ObnvDepartment();
+                        ObnvEmployee();
+                        editEmpl.IsEnabled = true;
+                        editDep.IsEnabled = true;
+                        addDep.IsEnabled = true;
+                        addEmpl.IsEnabled = true;
+                    }
+                    else
+                    {
+                        MessageBox.Show("Ошибка! Вы неверно ввели логин или пароль!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка! Вы не ввели логин или пароль!", "Ошибка Данных!", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
         }
         private void ObnvDepartment()
         {
@@ -66,27 +90,9 @@ namespace Lesson7
                 connect.Close();
             }
         }
-        private string Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            Avtorization avtorization = new Avtorization();
-            if (avtorization.ShowDialog() == true)
-            {
-                loginUser = avtorization.LoginTB.Text.ToString();
-                PasswUser = avtorization.PasswTB.Text.ToString();
-                SqlConnection connect = new SqlConnection(connectionString);
-                connect.Open();
-                if (connect.State == ConnectionState.Open)
-                {
-                    ObnvEmployee();
-                    ObnvDepartment();
-                }
-                else
-                {
-                    MessageBox.Show("Ошибка! Вы ввели неверно логин или пароль!", "Ошибка подключения к БД!", MessageBoxButton.OK, MessageBoxImage.Error);
-                }
-            }
-            ObnvEmployee();
-            ObnvDepartment();
+            ConnectDB();
         }
         private void editEmpl_Click(object sender, RoutedEventArgs e)
         {
@@ -217,7 +223,7 @@ namespace Lesson7
 
         private void addDep_Click(object sender, RoutedEventArgs e)
         {
-            AddDepartment addDepartment = new AddDepartment();
+            AddDepartment addDepartment = new AddDepartment();            
             if (addDepartment.ShowDialog() == true)
             {
                 if (addDepartment.addDeptextBox.Text != "")
@@ -241,9 +247,9 @@ namespace Lesson7
             }
         }
 
-        private void ConnectDB_Click(object sender, RoutedEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
+            Application.Current.Shutdown();
         }
     }
 }

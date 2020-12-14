@@ -9,10 +9,10 @@
     <Grid>
         <Label x:Name="label" Content="Логин" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
         <Label x:Name="label_Copy" Content="Пароль" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="LoginTB" HorizontalAlignment="Left" Height="23" Margin="95,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="177"/>
-        <TextBox x:Name="PasswTB" HorizontalAlignment="Left" Height="23" Margin="95,45,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="177"/>
-        <Button x:Name="ConnectDBBT" Content="Подключиться" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="114" Click="ConnectDBBT_Click"/>
-        <Button x:Name="Cancel" Content="Отмена" HorizontalAlignment="Left" Margin="158,85,0,0" VerticalAlignment="Top" Width="114" Click="Cancel_Click"/>
+        <TextBox x:Name="LoginTB" HorizontalAlignment="Left" Height="23" Margin="95,13,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="177" TabIndex="0"/>
+        <Button x:Name="ConnectDBBT" Content="Подключиться" HorizontalAlignment="Left" Margin="10,85,0,0" VerticalAlignment="Top" Width="114" Click="ConnectDBBT_Click" TabIndex="2"/>
+        <Button x:Name="Cancel" Content="Отмена" HorizontalAlignment="Left" Margin="158,85,0,0" VerticalAlignment="Top" Width="114" Click="Cancel_Click" TabIndex="3"/>
+        <PasswordBox x:Name="passwBoxAvt" HorizontalAlignment="Left" Margin="95,49,0,0" VerticalAlignment="Top" Width="177" TabIndex="1"/>
 
     </Grid>
 </Window>

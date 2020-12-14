@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,6 +23,25 @@ namespace Lesson7
         public EditEmpl()
         {
             InitializeComponent();
+            this.PhonetextBox.PreviewTextInput += PhonetextBox_PreviewTextInput;
+            this.FIOtextBox.PreviewTextInput += FIOtextBox_PreviewTextInput;
+            this.edtdatePicker.PreviewTextInput += EdtdatePicker_PreviewTextInput;
+        }
+
+        private void EdtdatePicker_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            Regex regex = new Regex("[^0-9.]+");
+            e.Handled = regex.IsMatch(e.Text);
+        }
+
+        private void FIOtextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsLetter(e.Text, 0)) e.Handled = true;
+        }
+
+        private void PhonetextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            if (!Char.IsDigit(e.Text, 0)) e.Handled = true;
         }
 
         private void saveButton_Click(object sender, RoutedEventArgs e)
@@ -33,5 +53,6 @@ namespace Lesson7
         {
             this.DialogResult = false;
         }
+
     }
 }
